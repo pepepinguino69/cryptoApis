@@ -78,10 +78,10 @@
   for (let i=0;i<arr.length;i++){
     if(arr[i][priceColumn]==0){break}
     graphData.push(arr[i][priceColumn])
-    graphData2.push(arr[i][volumeColumn]/10000)
+    graphData2.push(arr[i][volumeColumn])
     let date=new Date(arr[i][dateColumn])
    
-    graphLabels.push(i%15!=0?xAxis="":xAxis=date.getDate()+'/'+(date.getMonth()+1)+'/'+date.getFullYear())
+    graphLabels.push(date.getDate()+'/'+(date.getMonth()+1)+'/'+date.getFullYear())
     if (i+1==arr.length){graphLabels.push(date.getDate()+'/'+(date.getMonth()+1)+'/'+date.getFullYear())}
   }
   chartId=document.getElementById("line-chart")
@@ -89,7 +89,7 @@
     {
     
     type: 'line',
-      yAxesGroup: "1",
+      yAxisID: "1",
           data: [],
           label: "Bitcoin",
           borderColor: "#3e95cd",
@@ -99,22 +99,13 @@
         {
     
     type: 'bar',
-    yAxesGroup: "2",
+    yAxisID: "2",
           data: [],
           label: "Bitcoin",
           borderColor: "#3e95cd",
           fill: false
           }
         ]}
-    
-    
-    
-    
-    
-    
-    
-      
-    
     ,
     
     options:{
@@ -123,15 +114,17 @@
         title: {display: true, text: '',font:{size:30}}
               },
               scales: {
-      y1: {
+      1: {
         type: 'linear',
         display: true,
         position: 'left',
+        
       },
-      y2: {
+      2: {
         type: 'linear',
         display: true,
         position: 'right',
+        max:4000000,
         grid: {
           drawOnChartArea: true, // only want the grid lines for one axis to show up
         },
@@ -147,7 +140,7 @@
    // alert(Object.keys(ctx.config.data.datasets[1]))
     ctx.config.data.datasets[1].data=graphData2
     ctx.config.data.datasets[0].label=symbolDesc
-    ctx.config.options.plugins.title.text=symbolDesc+' Daily Price Close - '+graphLabels[0]+'-'+graphLabels.slice(-1)
+    ctx.config.options.plugins.title.text=symbolDesc+' Ahora - Daily Price Close - '+graphLabels[0]+'-'+graphLabels.slice(-1)
     ctx.update()
     }
    )
