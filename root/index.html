@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+      .flex{display:flex;justify-content: space-around;align-items: center;}
+      button{width:180px;height:60px;border-radius: 10px;font-size: 20px;}
+
+    </style>
+</head>
+<body>
+         <div>
+          <canvas id="line-chart" width="500" height="200"></canvas>
+        </div>
+    <div id='panel' class="flex"></div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+    
+    symbolObject=[ 
+    {'id':0,'name':'Ethereum','symbol':'ETHUSDT','description':'Ethereum'},
+    {'id':1,'name':'Bitcoin','symbol':'BTCUSDT','description':'Bitcoin'},
+    {'id':2,'name':'Binance','symbol':'BNBUSDT','description':'Binance Coin'},
+    {'id':3,'name':'Ripple','symbol':'XRPUSDT','description':'Ripple'}]
+
+    symbolObject.forEach((e,index)=>{
+      btn = document.createElement('button')
+      btn.setAttribute('id',symbolObject[index].id)
+      btn.setAttribute('class','flex')
+      
+      btn.innerText=symbolObject[index]['name']
+      
+      btn.innerHTML+=`<img src="img/${symbolObject[index]['symbol'].substring(0,3).toLowerCase()}.svg"/>`
+      
+      btn.addEventListener('click',(event)=>{ctx.destroy();graph(event.target.id)})
+      document.getElementById('panel').appendChild(btn)
+
+    
+    })
+
+    
+    let arr=[]
+    const dateColumn=0
+    const priceColumn=4
+    const graphData=[]
+    const graphLabels=[]
+    graph(2)
+
+    function graph(selectedCrypto){
+
+
+    const baseUrl ='https://api.binance.com'
+    const interUrl='&interval='
+    const symbolUrl='?symbol='
+    const endpointUrl='/api/v3/klines'
+
+    let userSymbolUrl=symbolObject[selectedCrypto].symbol
+    const symbolDesc=symbolObject[selectedCrypto].description
+    let userIntervalUrl='1d'
+
+    let urlApi=baseUrl+endpointUrl+symbolUrl+userSymbolUrl+interUrl+userIntervalUrl
+    
+    
+    async function getTimeSeries() {
+      const response = await fetch(urlApi);
+      const  data = await response.json();
+      return data
+    }
+   getTimeSeries().then((series) => {
+  arr = series;
+  graphData.length=0
+  graphLabels.length=0
+  for (let i=0;i<arr.length;i++){
+    if(arr[i][priceColumn]==0){break}
+    graphData.push(arr[i][priceColumn])
+    let date=new Date(arr[i][dateColumn])
+   
+    graphLabels.push(i%15!=0?xAxis="":xAxis=date.getDate()+'/'+(date.getMonth()+1)+'/'+date.getFullYear())
+    if (i+1==arr.length){graphLabels.push(date.getDate()+'/'+(date.getMonth()+1)+'/'+date.getFullYear())}
+  
+  }
+
+  chartId=document.getElementById("line-chart")
+  ctx = new Chart(chartId, {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [{ 
+          data: [],
+          label: "Bitcoin",
+          borderColor: "#3e95cd",
+          fill: false
+          }]
+          },
+          options: {
+            plugins:{
+              legend:{display:false,labels:{font:{size:30}}},
+              title: {
+                display: true,
+                text: '',
+                font:{size:30,
+                    }}
+                  }
+   }});
+    ctx.config.data.labels=graphLabels
+    ctx.config.data.datasets[0].data=graphData
+    ctx.config.data.datasets[0].label=symbolDesc
+    
+    ctx.config.options.plugins.title.text=symbolDesc+' Daily Price Close - '+graphLabels[0]+'-'+graphLabels.slice(-1)
+    ctx.update()
+    }
+   )
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+</body>
+</html>
