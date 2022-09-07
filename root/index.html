@@ -44,7 +44,9 @@
     let arr=[]
     const dateColumn=0
     const priceColumn=4
+    const volumeColumn=5
     const graphData=[]
+    const graphData2=[]
     const graphLabels=[]
     graph(2)
 
@@ -72,42 +74,79 @@
   arr = series;
   graphData.length=0
   graphLabels.length=0
+  graphData2.length=0
   for (let i=0;i<arr.length;i++){
     if(arr[i][priceColumn]==0){break}
     graphData.push(arr[i][priceColumn])
+    graphData2.push(arr[i][volumeColumn]/10000)
     let date=new Date(arr[i][dateColumn])
    
     graphLabels.push(i%15!=0?xAxis="":xAxis=date.getDate()+'/'+(date.getMonth()+1)+'/'+date.getFullYear())
     if (i+1==arr.length){graphLabels.push(date.getDate()+'/'+(date.getMonth()+1)+'/'+date.getFullYear())}
-  
   }
-
   chartId=document.getElementById("line-chart")
-  ctx = new Chart(chartId, {
+  ctx = new Chart(chartId, {data:{datasets: [
+    {
+    
     type: 'line',
-    data: {
-      labels: [],
-      datasets: [{ 
+      yAxesGroup: "1",
           data: [],
           label: "Bitcoin",
           borderColor: "#3e95cd",
           fill: false
-          }]
-          },
-          options: {
-            plugins:{
-              legend:{display:false,labels:{font:{size:30}}},
-              title: {
-                display: true,
-                text: '',
-                font:{size:30,
-                    }}
-                  }
-   }});
+          }
+        ,
+        {
+    
+    type: 'bar',
+    yAxesGroup: "2",
+          data: [],
+          label: "Bitcoin",
+          borderColor: "#3e95cd",
+          fill: false
+          }
+        ]}
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    ,
+    
+    options:{
+      plugins:{
+        legend:{display:false,labels:{font:{size:30}}},
+        title: {display: true, text: '',font:{size:30}}
+              },
+              scales: {
+      y1: {
+        type: 'linear',
+        display: true,
+        position: 'left',
+      },
+      y2: {
+        type: 'linear',
+        display: true,
+        position: 'right',
+        grid: {
+          drawOnChartArea: true, // only want the grid lines for one axis to show up
+        },
+      },
+
+    }
+            }
+          }
+      
+            );
     ctx.config.data.labels=graphLabels
     ctx.config.data.datasets[0].data=graphData
+   // alert(Object.keys(ctx.config.data.datasets[1]))
+    ctx.config.data.datasets[1].data=graphData2
     ctx.config.data.datasets[0].label=symbolDesc
-    
     ctx.config.options.plugins.title.text=symbolDesc+' Daily Price Close - '+graphLabels[0]+'-'+graphLabels.slice(-1)
     ctx.update()
     }
