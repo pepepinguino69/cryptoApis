@@ -123,7 +123,14 @@
     options:{responsive:true,
       plugins:{
         legend:{display:false,labels:{font:{size:30}}},
-        title: {display: true, text: '',font:{size:30}}
+        title: {display: true, text: '',font: function(context) {
+  var width = context.chart.width;
+  var size = Math.round(width / 32);
+    return {
+      size: size,
+      weight: 600
+    };
+}}
               },
               scales: {
       1: {
