@@ -8,7 +8,7 @@
     <style>
       .flex{display:flex;justify-content: space-around;align-items: center;}
       button{width:180px;height:60px;border-radius: 10px;font-size: 20px;}
-      @media only screen and (max-width: 500px) {button{width:90px}
+      @media only screen and (max-width: 500px) {button{width:90px;font-size: 14px;}
       #chartcontainer {
   position:relative;
   min-height:auto;
@@ -95,8 +95,8 @@
   }
   chartId=document.getElementById("line-chart")
   
-  Chart.defaults.global.responsive = true
-
+  
+  
   ctx = new Chart(chartId, {data:{datasets: [
     {
     
@@ -120,7 +120,7 @@
         ]}
     ,
     
-    options:{
+    options:{responsive:true,
       plugins:{
         legend:{display:false,labels:{font:{size:30}}},
         title: {display: true, text: '',font:{size:30}}
@@ -148,8 +148,9 @@
       
             );
     ctx.config.data.labels=graphLabels
+
     ctx.config.data.datasets[0].data=graphData
-   // alert(Object.keys(ctx.config.data.datasets[1]))
+  
     ctx.config.data.datasets[1].data=graphData2
     ctx.config.data.datasets[0].label=symbolDesc
     ctx.config.options.plugins.title.text=symbolDesc+'  - Daily Price Close - '+graphLabels[0]+'-'+graphLabels.slice(-1)
